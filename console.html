@@ -1,0 +1,39 @@
+<html>
+<style>
+span{
+  display: block;
+  outline: none;
+  resize: none;
+  overflow: hide;
+  white-space: no-wrap;
+}
+span br {
+    display: none
+}
+
+</style>
+<script>
+function init(){
+  var cn = document.getElementById("con1");
+  var ln = cn.children;
+  alert(ln.length);
+  for(var i=0; i< ln.length; i++){
+    ln[i].textContent = "#";
+  }
+}
+</script>
+<body onLoad="init()">
+<div id="con1">
+<span></span>
+<span></span>
+<span contentEditable="true"></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+</body>
+</html>
