@@ -43,11 +43,17 @@ async function test2(el){
 
 async function test3(){
 	const writer = prt.writable.getWriter();
-	ip = document.getElementById('inp1');
-	ch = ip.value.charCodeAt(0);
-	ip.value="";
-	const data = new Uint8Array([ch, 10]);
+	var ip = document.getElementById('inp1');
+	var ln = ip.value.length;
+	bytes = new Uint8Array(ln + 2);
+	for(var i=0; i<ln; i++){
+		bytes[i] = ip.value.charCodeAt(i);
+	}
+	bytes[ln] = 10;
+	bytes[ln + 1] = 13;
+	const data = new Uint8Array(bytes);
 	await writer.write(data);
+	ip.value="";
 	writer.releaseLock();
 }
 
