@@ -4,57 +4,57 @@ let prt;
 let reader;
 
 function test(){
-	var a = document.getElementById('out1');
-	a.textContent = 'Hello World!';
-	if ("serial" in navigator) {
-		a.innerHTML = 'Serial Port supported!' + '<br>';
-	}
-	test2(a);
+  var a = document.getElementById('out1');
+  a.textContent = 'Hello World!';
+  if ("serial" in navigator) {
+    a.innerHTML = 'Serial Port supported!' + '<br>';
+  }
+  test2(a);
 }
 
 async function test2(el){
-	const port = await navigator.serial.requestPort();
-	prt = port;
-	alert(prt.getInfo().usbProductId);
-	el.innerHTML += port.getInfo().usbVendorId.toString(16) + '<br>';
-	el.innerHTML += port.getInfo().usbProductId.toString(16) + '<br>';
-	await port.open({ baudRate: 9600 });
+  const port = await navigator.serial.requestPort();
+  prt = port;
+  alert(prt.getInfo().usbProductId);
+  el.innerHTML += port.getInfo().usbVendorId.toString(16) + '<br>';
+  el.innerHTML += port.getInfo().usbProductId.toString(16) + '<br>';
+  await port.open({ baudRate: 9600 });
 
-	//const reader = port.readable.getReader();
+  //const reader = port.readable.getReader();
 
-	const textDecoder = new TextDecoderStream();
-	const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
-	reader = textDecoder.readable.getReader();
+  const textDecoder = new TextDecoderStream();
+  const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+  reader = textDecoder.readable.getReader();
   try {
-	while (true) {
-  		const { value, done } = await reader.read();
-  		if (done) {
-    			reader.releaseLock();
-    			break;
- 		}
- 		console.log(value);
-	}
-    } catch (error) {
-	alert(error);
-    } finally {
-      reader.releaseLock();
-    }
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) {
+        reader.releaseLock();
+        break;
+      }
+      console.log(value);
+      }
+  } catch (error) {
+    alert(error);
+  } finally {
+    reader.releaseLock();
+  }
 }
 
 async function test3(){
-	const writer = prt.writable.getWriter();
-	var ip = document.getElementById('inp1');
-	var ln = ip.value.length;
-	bytes = new Uint8Array(ln + 2);
-	for(var i=0; i<ln; i++){
-		bytes[i] = ip.value.charCodeAt(i);
-	}
-	bytes[ln] = 10;
-	bytes[ln + 1] = 13;
-	const data = new Uint8Array(bytes);
-	await writer.write(data);
-	ip.value="";
-	writer.releaseLock();
+  const writer = prt.writable.getWriter();
+  var ip = document.getElementById('inp1');
+  var ln = ip.value.length;
+  bytes = new Uint8Array(ln + 2);
+  for(var i=0; i<ln; i++){
+    bytes[i] = ip.value.charCodeAt(i);
+  }
+  bytes[ln] = 10;
+  bytes[ln + 1] = 13;
+  const data = new Uint8Array(bytes);
+  await writer.write(data);
+  ip.value="";
+  writer.releaseLock();
 }
 
 </script>
